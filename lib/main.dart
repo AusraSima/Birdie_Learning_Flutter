@@ -51,9 +51,14 @@ class Tile extends StatelessWidget {
   }
 }
 
-class GamePage extends StatelessWidget {
+class GamePage extends StatefulWidget {
   GamePage({super.key});
 
+  @override
+  State<GamePage> createState() => _GamePageState();
+}
+
+class _GamePageState extends State<GamePage> {
   final Game _game = Game();
 
   @override
@@ -65,14 +70,24 @@ class GamePage extends StatelessWidget {
         children: [
           for (final guess in _game.guesses)
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               spacing: 5.0,
               children: [
-                for (final letter in guess) Tile(letter.char, letter.type),
+                for (final letter in guess)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 2.5,
+                      vertical: 2.5,
+                    ),
+                    child: Tile(letter.char, letter.type),
+                  ),
               ],
             ),
           GuessInput(
-            onSubmitGuess: (guess) {
-              print(guess);
+            onSubmitGuess: (String guess) {
+              setState(() {
+                _game.guess(guess);
+              });
             },
           ),
         ],
